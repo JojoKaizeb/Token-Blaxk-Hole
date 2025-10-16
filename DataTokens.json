@@ -1,24 +1,30 @@
-{
-  "tokens": [
-    "7701726225:AAE9rJk4NrjX-CcEVEjjUvr84ZTux7jEu1A",
-    "7713907020:AAGxClEDbHOYHUIIE9OsarXcj0uzztXG5ho",
-    "7791454320:AAGxX95LLResvnkCrIgnWTc-Y0Z3L5sJx7c",
-    "7590478822:AAEafnq2F1oHMRSjvnbnCRyZhoONc8R9hmQ",
-    "7453668345:AAHCiiN1CbBDX8vQd3qEZKdUMeywmCSWz8o",
-    "7925758092:AAGEwBz_qeium53I5eZWBo1lo6HHXQFZQ5E",
-    "7833620053:AAFMN_Z33Ft6AtUwFJbw9f1edzJNZe1YZb4",
-    "7949561626:AAHN7JJz5XSxX1fTcXp3QHRcxolTheuq4Ms",
-    "8031376970:AAFnL752tmM8p_sidB6FO-hjzmBMLS-ZPq0",
-    "8026270078:AAFGeV3c5RCrfMacTOYAm50oeQo41PrUi6Q",
-    "7267312876:AAGR2hw_hdrUU81lndd-SoW5j99fQRglJL8",
-    "8133409898:AAF4FqGuGrvPbh8nHiXZny-BdnXp_aYPG2Y",
-    "7576073072:AAEdQz4NofUG-6y0aOtasqfqvafCiWpg_R0",
-    "7544666147:AAH3WlKUNwDC0ETOWDSHXIpKA1viP4IcjiA",
-    "7733537543:AAEbEM_jO53zzFvX_dgbrOWemJDP7ZIdWGE",
-    "7882902931:AAG3Z2A6XvCkQFBLpP-bEPNIQf_BQlA2FoA",
-    "8024142974:AAH3chvAsqfr9PXReiUP591hRg-ZSeYjL0k",
-    "7854429005:AAEyR5mNyzk3KWLFawlh9wIoAszWZRDDwhg",
-    "8077221804:AAEOP4HHB_hvK_Bf8CcYGJOEhFHgoR2RnMw",
-    "7892509867:AAEZh4WSpeF5gXryFU8pzM9j1e87gB1sWnQ"
-  ]
-}
+/*
+  =====================================================
+  🔥 BOT TELEGRAM BY RADITXUZO 🔥
+  =====================================================
+  Copyright © 2025 Radit Xuzo
+  Semua hak cipta dilindungi.
+
+  ❗ File ini wajib ada di direktori utama bot.
+  ❗ Jangan hapus atau ubah isi file ini.
+
+  File ini digunakan untuk verifikasi keaslian bot.
+  Jika isi atau file ini dihapus, sistem tidak akan berjalan.
+
+  =====================================================
+  Socials:
+  🌐 GitHub   : https://github.com/RaditXuzo
+  📸 Instagram: @raditxuzo
+  =====================================================
+*/
+
+// Jangan ubah kode unik di bawah ini!
+const verificationCode = "raditxuzo888";
+
+// Informasi tambahan (boleh diubah kalau mau nambah promosi, asal gak ubah kode unik)
+console.log("✅ Bot Telegram resmi milik RaditXuzo aktif!");
+console.log("📢 Kunjungi GitHub: https://github.com/RaditXuzo");
+console.log("🚀 Dilarang keras menghapus hak cipta!");
+
+// Ekspor kode verifikasi untuk dicek oleh index.js
+export default verificationCode;
