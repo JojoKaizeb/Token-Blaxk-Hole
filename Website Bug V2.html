@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SUPERVOID - Liminal Shadow</title>
+<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display">
+<!-- Library untuk Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+:root{
+  --bg:#05000a;
+  --text:#f4eaff;
+  --purple1:#b983ff;
+  --purple2:#8f3dff;
+  --purple3:#d7b5ff;
+  --green:#4ade80;
+  --saturation:1;
+  --planetGlow:1;
+}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"SF Pro Display",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+}
+body{
+  background:#05000a;
+  color:var(--text);
+  overflow:hidden;
+  height:100vh;
+  filter:saturate(var(--saturation));
+  transition:filter .25s ease;
+}
+@font-face {
+  font-family: 'PakTzy';
+  src: url('https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2') format('woff2');
+  font-display: swap;
+}
+#shadowDNA{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+.overlay{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(185,131,255,.22),transparent 55%),
+    radial-gradient(circle at 80% 100%,rgba(143,61,255,.2),transparent 60%);
+  z-index:0;
+}
+#wrapperWarp{
+  position:fixed;
+  inset:0;
+  left:50%; top:50%;
+  width:12px;
+  height:12px;
+  transform:translate(-50%,-50%) scale(0);
+  border-radius:999px;
+  background:#000;
+  opacity:0;
+  pointer-events:none !important;
+  z-index:999;
+  transition:
+    transform .45s ease-in-out,
+    opacity .4s ease-out,
+    border-radius .45s ease-in-out;
+}
+.loader-wrap{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+}
+.loader-inner{
+  width:340px;
+  max-width:92vw;
+  background:rgba(30,0,55,.7);
+  padding:24px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(18px);
+  animation:fadeIn .5s ease forwards;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.loader-inner label{
+  font-size:.85rem;
+  opacity:.85;
+}
+.field{margin-top:6px;margin-bottom:16px;}
+.field input{
+  width:100%;
+  padding:11px 13px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(40,0,70,.6);
+  color:#fdfbff;
+}
+.btn{
+  width:100%;
+  padding:11px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  font-size:.9rem;
+  font-weight:600;
+  background:linear-gradient(135deg,var(--purple1),var(--purple2));
+  color:#0a000f;
+}
+.dashboard{
+  position:fixed;
+  inset:0;
+  padding:26px;
+  display:none;
+  z-index:5;
+}
+.profile-card{
+  max-width:520px;
+  margin:auto;
+  background:rgba(25,0,50,.6);
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(18px);
+  box-shadow:0 0 22px rgba(0,0,0,.7);
+}
+.profile-img{
+  width:100%;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+.connect-bar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 11px;
+  border-radius:12px;
+  background:rgba(15,0,30,.9);
+}
+.greenDot{
+  width:12px;height:12px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+}
+.greet{
+  margin-top:12px;
+  font-size:1.3rem;
+  font-weight:700;
+}
+.role-card{
+  margin-top:16px;
+  padding:12px 13px;
+  border-radius:14px;
+  background:rgba(38,0,70,.7);
+  border:1px solid rgba(255,255,255,.13);
+}
+.role-card .highlight{
+  color:var(--purple3);
+  font-weight:600;
+}
+.side-icons{
+  position:fixed;
+  top:30px;
+  right:30px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:10;
+}
+.icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(15,0,30,.85);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);
+  cursor:pointer;
+  transition:.2s ease;
+}
+.icon:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 15px rgba(185,131,255,.5);
+}
+.orbit-wrapper{
+  position:fixed;
+  bottom:100px;
+  left:50%;
+  transform:translateX(-50%);
+  width:230px;
+  height:230px;
+  display:none;
+  z-index:20;
+}
+.blackhole{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,#000 40%,#14001f 70%);
+  box-shadow:
+    0 0 20px rgba(143,61,255,.9),
+    0 0 55px rgba(185,131,255,.7);
+  cursor:pointer;
+  overflow:visible;
+  /* Pseudo-elements untuk efek event horizon */
+  position: relative;
+}
+.blackhole::before,
+.blackhole::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.blackhole::before {
+  border: 2px solid var(--purple3);
+  box-shadow: 0 0 10px var(--purple3), 0 0 20px var(--purple2);
+  animation: ripple 2s infinite ease-out;
+}
+.blackhole::after {
+  background: conic-gradient(from 0deg, rgba(185,131,255,0), rgba(185,131,255,.9), rgba(185,131,255,0), rgba(141,80,255,.7), rgba(185,131,255,0));
+  opacity: 0.7;
+  animation: rotate 3.8s linear infinite;
+  filter: blur(2px);
+}
+.blackhole.bh-active::before,
+.blackhole.bh-active::after {
+  opacity: 0.95;
+}
+.blackhole.bh-sweep::before,
+.blackhole.bh-sweep::after {
+  opacity: 0;
+}
+@keyframes ripple {
+  0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px var(--purple3), 0 0 20px var(--purple2); }
+  50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 20px var(--purple3), 0 0 40px var(--purple2); }
+  100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 10px var(--purple3), 0 0 20px var(--purple2); }
+}
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.bh-particles{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 25% 25%,rgba(255,255,255,.6),transparent 55%),
+    radial-gradient(circle at 70% 60%,rgba(210,170,255,.9),transparent 60%),
+    radial-gradient(circle at 40% 80%,rgba(200,150,255,.7),transparent 65%);
+  mix-blend-mode:screen;
+  opacity:.7;
+  animation:bhPulse 2.2s ease-in-out infinite;
+}
+@keyframes bhPulse{
+  0%{transform:scale(1);opacity:.65;}
+  50%{transform:scale(1.08);opacity:1;}
+  100%{transform:scale(1);opacity:.65;}
+}
+.click-text{
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  font-size:.78rem;
+  color:#fff;
+  font-family:'PakTzy',system-ui,sans-serif;
+  letter-spacing:.04em;
+  animation:clickPulse 1.5s ease-in-out infinite;
+}
+@keyframes clickPulse{
+  0%{opacity:.35;}
+  50%{opacity:1;}
+  100%{opacity:.35;}
+}
+.planet{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(0);
+  opacity:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(15,0,30,.85);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 0 calc(16px * var(--planetGlow)) rgba(185,131,255,.55);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease-out;
+  transform-origin: 50% 50%; /* Penting untuk rotasi orbit */
+}
+.planet img{
+  width:20px;
+  filter:brightness(1.3) drop-shadow(0 0 6px #c9a4ff);
+}
+/* Orbit positions using trigonometry via CSS variables */
+.orbit1 { --angle: 0deg; }
+.orbit2 { --angle: 60deg; }
+.orbit3 { --angle: 120deg; }
+.orbit4 { --angle: 180deg; }
+.orbit5 { --angle: 240deg; }
+.orbit6 { --angle: 300deg; }
+
+.planet.at-orbit {
+  transform: translate(-50%, -50%) rotate(var(--angle)) translate(0, -90px) rotate(calc(-1 * var(--angle))) scale(1);
+  opacity: 1;
+}
+
+/* Animasi rotasi orbit planet */
+.planet.at-orbit {
+  animation: revolvePlanet 20s linear infinite;
+}
+
+@keyframes revolvePlanet {
+  from { transform: translate(-50%, -50%) rotate(var(--angle)) translate(0, -90px) rotate(calc(-1 * var(--angle))) scale(1); }
+  to { transform: translate(-50%, -50%) rotate(calc(var(--angle) + 360deg)) translate(0, -90px) rotate(calc(-1 * (var(--angle) + 360deg))) scale(1); }
+}
+
+.fullpage{
+  position:fixed;
+  inset:0;
+  background:#05000e;
+  display:none;
+  color:white;
+  z-index:60;
+  padding:20px;
+  overflow-y:auto;
+}
+.pageTitle{
+  font-size:1.35rem;
+  margin-bottom:10px;
+  font-weight:600;
+}
+.roundImg{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  display:block;
+  margin:8px auto 14px auto;
+  box-shadow:0 0 15px rgba(143,61,255,.8);
+}
+.section{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:rgba(15,0,30,.6);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+}
+.section label{
+  font-size:.9rem;
+  opacity:.8;
+}
+.section input,
+.section select{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.18);
+  background:#130021;
+  color:white;
+  font-size:.88rem;
+}
+.section input[type="range"]{
+  padding:0;
+  background:transparent;
+  border:none;
+}
+.btnRow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.btnSmall{
+  flex:1;
+  min-width:130px;
+  padding:9px 11px;
+  border-radius:999px;
+  border:none;
+  font-size:.82rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.btnPrimary{
+  background:linear-gradient(135deg,var(--purple1),var(--purple2));
+  color:#0a000f;
+}
+.btnGhost{
+  background:rgba(255,255,255,.12);
+  color:white;
+}
+.btnDanger{
+  background:linear-gradient(135deg,#ff5e7e,#ff2244);
+  color:white;
+}
+.backBtn{
+  width:100%;
+  margin-top:20px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  background:rgba(255,255,255,.1);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+.accounts-list{
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#0c0016;
+  max-height:220px;
+  overflow-y:auto;
+  font-size:.82rem;
+}
+.account-item{
+  padding:8px 10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.yt-search-box{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.yt-search-box input{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.18);
+  background:#120022;
+  color:#f8f3ff;
+  outline:none;
+}
+.yt-search-box input::placeholder{
+  color:rgba(255,255,255,.45);
+}
+.yt-results{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+.yt-card{
+  background:rgba(25,0,50,.75);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.1);
+  overflow:hidden;
+  cursor:pointer;
+  transition:.22s ease;
+  box-shadow:0 0 10px rgba(0,0,0,.6);
+}
+.yt-card:hover{
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 0 22px rgba(143,61,255,.7);
+}
+.yt-thumb img{
+  width:100%;
+  display:block;
+}
+.yt-info{
+  padding:10px 11px 11px 11px;
+}
+.yt-title{
+  font-size:.9rem;
+  font-weight:600;
+  margin-bottom:4px;
+}
+.yt-channel{
+  font-size:.78rem;
+  opacity:.75;
+}
+.yt-empty{
+  font-size:.85rem;
+  opacity:.8;
+  padding:6px 2px;
+}
+.yt-player-wrapper{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at center,rgba(10,0,25,.9),rgba(0,0,0,.95));
+  backdrop-filter:blur(10px);
+  z-index:120;
+}
+.yt-player-wrapper.hidden{
+  display:none;
+}
+.yt-player-box{
+  width:92%;
+  max-width:780px;
+  position:relative;
+  padding:8px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(185,131,255,.18),rgba(40,0,80,.85));
+  box-shadow:
+    0 0 30px rgba(143,61,255,.7),
+    0 0 60px rgba(0,0,0,.9);
+}
+.yt-player-box::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:18px;
+  border:1px solid rgba(215,181,255,.35);
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.yt-player-box iframe{
+  width:100%;
+  height:430px;
+  border:none;
+  border-radius:14px;
+  background:#000;
+}
+
+/* --- VOIDAI CHAT STYLES --- */
+.voidai-container {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 0, 10, 0.95); /* Gelap, transparan */
+  backdrop-filter: blur(15px);
+  z-index: 150;
+  display: none; /* Awalnya disembunyikan */
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.voidai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+}
+.voidai-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--purple1);
+  letter-spacing: 1px;
+}
+.voidai-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.voidai-chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(10, 0, 20, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 15px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.voidai-message {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  line-height: 1.5;
+  position: relative;
+  animation: fadeInUp 0.3s ease-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.voidai-message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--purple2), var(--purple1));
+  color: #0a000f;
+  border-bottom-right-radius: 5px;
+}
+.voidai-message.voidai {
+  align-self: flex-start;
+  background: rgba(20, 0, 40, 0.7);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 5px;
+}
+.voidai-message.voidai a {
+  color: var(--purple1);
+  text-decoration: underline;
+}
+.voidai-input-area {
+  display: flex;
+  gap: 10px;
+}
+.voidai-input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 0, 40, 0.6);
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+}
+.voidai-input:focus {
+  border-color: var(--purple2);
+  box-shadow: 0 0 0 2px rgba(143, 61, 255, 0.3);
+}
+.voidai-send-btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--purple1), var(--purple2));
+  color: #0a000f;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.voidai-send-btn:hover {
+  transform: scale(1.03);
+}
+.voidai-thinking {
+  display: none; /* Awalnya disembunyikan */
+  align-self: flex-start;
+  background: rgba(20, 0, 40, 0.7);
+  color: var(--text);
+  padding: 12px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 5px;
+  margin-bottom: 10px;
+}
+.voidai-thinking-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.voidai-think-circle {
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px 2px var(--purple2),
+    0 0 20px 5px var(--purple1);
+  animation: pulseGlow 1.5s infinite ease-in-out;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px 2px var(--purple2), 0 0 20px 5px var(--purple1); }
+  50% { box-shadow: 0 0 15px 4px var(--purple2), 0 0 30px 10px var(--purple1); }
+}
+.voidai-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  padding: 12px 20px;
+  background: rgba(30, 0, 50, 0.95);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.voidai-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+@media(max-width:600px){
+  .dashboard{padding:18px;}
+  .profile-card{padding:14px;}
+  .side-icons{top:15px;right:15px;}
+  .orbit-wrapper{bottom:80px;}
+  .yt-player-box iframe{height:250px;}
+  .voidai-container { padding: 15px; }
+  .voidai-message { max-width: 90%; }
+}
+</style>
+</head>
+<body>
+<canvas id="shadowDNA"></canvas>
+<div class="overlay"></div>
+<div id="wrapperWarp"></div>
+<div class="loader-wrap" id="loaderW">
+  <div class="loader-inner">
+    <div style="text-align: center; margin-bottom: 16px; font-size: 1.4rem; font-weight: bold; letter-spacing: 2px;">S U P E R V O I D</div>
+    <label>Username</label>
+    <div class="field">
+      <input id="userInput" autocomplete="off" value="Shadow">
+    </div>
+    <label>Password</label>
+    <div class="field">
+      <input id="passInput" type="password" autocomplete="off" value="Liminal">
+    </div>
+    <button class="btn" onclick="login()">LOGIN</button>
+    <div style="text-align: center; margin-top: 10px; font-size: 0.7rem; opacity: 0.6;">
+      <div>Developed by <b>Liminal Shadow</b></div>
+      <div style="margin-top: 4px;">@UnknownUserZ7</div>
+    </div>
+  </div>
+</div>
+<div class="dashboard" id="dash">
+  <div class="side-icons">
+    <div class="icon" onclick="window.open('https://t.me/UnknownUserZ7', '_blank')">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111640.png" width="22" alt="Telegram">
+    </div>
+    <div class="icon" onclick="window.open('https://instagram.com', '_blank')">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" width="22" alt="Instagram">
+    </div>
+  </div>
+  <div class="profile-card">
+    <div style="text-align: center; margin-bottom: 10px; font-size: 1.2rem; font-weight: bold; letter-spacing: 1px;">S U P E R V O I D</div>
+    <img id="profileImg" class="profile-img" src="https://files.catbox.moe/szcrvk.jpg" alt="Profile">
+    <div class="connect-bar">
+      <div class="greenDot"></div>
+      <span>Connected • System Stable</span>
+    </div>
+    <div class="greet" id="greetText">Welcome Back, Shadow 👑</div>
+    <div class="role-card">
+      <div class="role-title">Role: <span class="highlight">Creator</span></div>
+      <div>Anda memiliki kendali penuh di dalam sistem ini.</div>
+    </div>
+  </div>
+</div>
+<div class="orbit-wrapper" id="orbitWrap">
+  <div class="blackhole bh-active" id="orbitCenter">
+    <div class="bh-particles"></div>
+    <span class="click-text">CLICK ME</span>
+  </div>
+  <div class="planet orbit1" id="youtubePlanet">
+    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
+  </div>
+  <div class="planet orbit2">
+    <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="Search">
+  </div>
+  <div class="planet orbit3" id="voidaiPlanet">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png" alt="VoidAI">
+  </div>
+  <div class="planet orbit4" id="creatorPlanet">
+    <img src="https://cdn-icons-png.flaticon.com/512/3263/3263836.png" alt="Creator">
+  </div>
+  <div class="planet orbit5" id="crasherPlanet">
+    <img src="https://cdn-icons-png.flaticon.com/512/1055/1055646.png" alt="Crasher">
+  </div>
+  <div class="planet orbit6" id="settingsPlanet">
+    <img src="https://cdn-icons-png.flaticon.com/512/3524/3524636.png" alt="Settings">
+  </div>
+</div>
+
+<!-- VoidAI Chat Container -->
+<div id="voidaiPage" class="voidai-container">
+    <div class="voidai-header">
+        <div class="voidai-title">VoidAI</div>
+        <button class="voidai-close-btn" onclick="closePage(voidaiPage)">&times;</button>
+    </div>
+    <div class="voidai-chat-area" id="voidaiChatArea">
+        <!-- Pesan akan ditambahkan di sini secara dinamis -->
+        <div class="voidai-message voidai">
+            <div>Hai, aku <strong>VoidAI</strong> ✨. Aku adalah AI yang dibuat oleh Radit (<a href="https://t.me/UnknownUserZ7" target="_blank">@UnknownUserZ7</a>). Aku bisa bantu kamu dengan berbagai hal, meskipun kadang aku cuek 😏. Tanya aja apa aja!</div>
+        </div>
+    </div>
+    <div class="voidai-thinking" id="voidaiThinking">
+        <div class="voidai-thinking-indicator">
+            <div class="voidai-think-circle"></div>
+            <div class="voidai-think-circle"></div>
+            <div class="voidai-think-circle"></div>
+        </div>
+    </div>
+    <div class="voidai-input-area">
+        <input type="text" id="voidaiInput" class="voidai-input" placeholder="Tanyakan sesuatu ke VoidAI..." onkeypress="if(event.key==='Enter') sendMessageVoidAI()">
+        <button class="voidai-send-btn" onclick="sendMessageVoidAI()">Kirim</button>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="voidaiToast" class="voidai-toast"></div>
+
+<div id="settingsPage" class="fullpage">
+  <div class="pageTitle">Settings</div>
+  <img src="https://files.catbox.moe/c7r36t.jpg" class="roundImg" alt="Shadow">
+  <div class="section">
+    <label>Graphic Mode</label>
+    <div class="btnRow" style="margin-top:8px;">
+      <button class="btnSmall btnPrimary" onclick="setMode(1)">Kentang 😋</button>
+      <button class="btnSmall btnGhost" onclick="setMode(2)">Medium</button>
+      <button class="btnSmall btnGhost" onclick="setMode(3)">High</button>
+    </div>
+  </div>
+  <div class="section">
+    <label>Saturasi</label>
+    <input id="satRange" type="range" min="0.5" max="2" step="0.05" value="1">
+  </div>
+  <div class="section">
+    <label>Nama Akun</label>
+    <input id="accName">
+    <label>Password</label>
+    <input id="accPass" type="password">
+    <label>Foto Profil (URL)</label>
+    <input id="accImg">
+    <div class="btnRow">
+      <button class="btnSmall btnPrimary" onclick="updateAccountInfo()">Update Info</button>
+      <button class="btnSmall btnGhost" onclick="resetAccountFields()">Reset Field</button>
+    </div>
+  </div>
+  <div class="section">
+    <label>Aksi Akun</label>
+    <div class="btnRow">
+      <button class="btnSmall btnDanger" onclick="logout()">Logout</button>
+      <button class="btnSmall btnGhost" onclick="closePage(settingsPage)">Back to Main Menu</button>
+    </div>
+  </div>
+</div>
+<div id="creatorPage" class="fullpage">
+  <div class="pageTitle">Creator Panel</div>
+  <div class="section">
+    <label>Tambah Akun Baru</label>
+    <input id="newAccName" placeholder="Nama akun">
+    <input id="newAccPass" type="password" placeholder="Password">
+    <input id="newAccImg" placeholder="Foto profil (URL)">
+    <select id="newAccDuration">
+      <option value="Permanent">Permanent</option>
+      <option value="30">30 Hari</option>
+      <option value="40">40 Hari</option>
+      <option value="50">50 Hari</option>
+    </select>
+    <div class="btnRow">
+      <button class="btnSmall btnPrimary" onclick="addCreatorAccount()">Tambah Akun</button>
+      <button class="btnSmall btnGhost" onclick="clearCreatorForm()">Clear</button>
+    </div>
+  </div>
+  <div class="section">
+    <label>Daftar Akun (Local)</label>
+    <div id="accountsList" class="accounts-list"></div>
+  </div>
+  <button class="backBtn" onclick="closePage(creatorPage)">Back to Main Menu</button>
+</div>
+<div id="youtubePage" class="fullpage">
+  <div class="pageTitle">YouTube Console</div>
+  <div class="section">
+    <label>Cari Video YouTube</label>
+    <div class="yt-search-box">
+      <input id="ytSearchInput" type="text" placeholder="Cari video...">
+      <button class="btnSmall btnPrimary" id="ytSearchBtn">Search</button>
+    </div>
+  </div>
+  <div class="section">
+    <label>Hasil</label>
+    <div id="ytResults" class="yt-results">
+      <div class="yt-empty">Belum ada pencarian.</div>
+    </div>
+  </div>
+  <button class="backBtn" onclick="closePage(youtubePage)">Back to Main Menu</button>
+  <div id="ytPlayerWrapper" class="yt-player-wrapper hidden">
+    <div class="yt-player-box">
+      <span id="ytClosePlayer" class="yt-close">✖</span>
+      <iframe id="ytPlayer"
+              src=""
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<div id="sendMsgPage" class="fullpage">
+  <div class="pageTitle">Crasher Menu</div>
+  <div class="section">
+    <label>Target Number (e.g. 6281234567890)</label>
+    <input id="whatsappNumber" type="tel" placeholder="62...">
+    <label style="margin-top: 12px;">Message Type</label>
+    <select id="messageType">
+      <option value="">-- Select Type --</option>
+      <option value="CursorX">CursorX</option>
+      <option value="iPhoneTrash">iPhoneTrash</option>
+      <option value="Delay">Delay</option>
+    </select>
+    <div class="btnRow" style="margin-top: 16px;">
+      <button class="btnSmall btnPrimary" onclick="sendMessage()">Send Message</button>
+      <button class="btnSmall btnGhost" onclick="closePage(sendMsgPage)">Back to Main Menu</button>
+    </div>
+  </div>
+</div>
+<script>
+// Inisialisasi variabel global
+let currentUsername = "Shadow";
+let currentPassword = "Liminal";
+let currentProfileUrl = "https://files.catbox.moe/szcrvk.jpg";
+let creatorAccounts = [];
+let orbitOpen = false;
+let HAS_LOGGED_IN = false; // Flag untuk login
+
+// Referensi elemen DOM
+const loaderW = document.getElementById("loaderW");
+const loginB  = document.querySelector(".loader-wrap");
+const dash    = document.getElementById("dash");
+const orbitWrap = document.getElementById("orbitWrap");
+const profileImg = document.getElementById("profileImg");
+const greetText  = document.getElementById("greetText");
+const wrapperWarp = document.getElementById("wrapperWarp");
+const orbitCenterEl = document.getElementById("orbitCenter");
+const settingsPage = document.getElementById("settingsPage");
+const creatorPage  = document.getElementById("creatorPage");
+const youtubePage  = document.getElementById("youtubePage");
+const sendMsgPage  = document.getElementById("sendMsgPage");
+const voidaiPage   = document.getElementById("voidaiPage"); // Tambahkan referensi ke halaman VoidAI
+const accName = document.getElementById("accName");
+const accPass = document.getElementById("accPass");
+const accImg  = document.getElementById("accImg");
+const satRange = document.getElementById("satRange");
+const accountsList = document.getElementById("accountsList");
+let planets = [];
+
+// Inisialisasi dan event listener utama
+document.addEventListener("DOMContentLoaded", function() {
+  // Get planet elements after DOM is ready
+  planets = Array.from(document.querySelectorAll(".planet"));
+
+  // Set initial states
+  setTimeout(()=>{
+    loaderW.style.display = "none";
+    loginB.style.display  = "flex";
+  }, 2600);
+
+  // Initialize settings fields
+  initSettingsFields();
+  renderAccounts();
+
+  // Setup event listeners untuk YouTube dan player
+  const ytSearchBtn = document.getElementById("ytSearchBtn");
+  const ytSearchInput = document.getElementById("ytSearchInput");
+  const ytClosePlayer = document.getElementById("ytClosePlayer");
+  const ytPlayerWrapper = document.getElementById("ytPlayerWrapper");
+
+  if(ytSearchBtn){
+    ytSearchBtn.addEventListener("click", searchYouTube);
+  }
+  if(ytSearchInput){
+    ytSearchInput.addEventListener("keypress", e=>{
+      if(e.key === "Enter") searchYouTube();
+    });
+  }
+  if(ytClosePlayer){
+    ytClosePlayer.addEventListener("click", closeYoutubePlayer);
+  }
+  if(ytPlayerWrapper){
+    ytPlayerWrapper.addEventListener("click", e=>{
+      if(e.target === ytPlayerWrapper) closeYoutubePlayer();
+    });
+  }
+
+  // Setup event listener untuk planet VoidAI
+  document.getElementById("voidaiPlanet").onclick = () => warpToPage(voidaiPage);
+
+  // Muat riwayat chat VoidAI
+  loadChatHistory();
+});
+
+function login(){
+  const u = document.getElementById("userInput").value.trim();
+  const p = document.getElementById("passInput").value.trim();
+  if(u === currentUsername && p === currentPassword){
+    if (!HAS_LOGGED_IN) { // Cegah login ganda
+        HAS_LOGGED_IN = true;
+        loginB.remove(); // Hapus elemen login
+        dash.style.display   = "block";
+        orbitWrap.style.display = "block";
+        profileImg.src = currentProfileUrl;
+        greetText.textContent = "Welcome Back, " + currentUsername + " 👑";
+        // Smooth animation on login
+        dash.style.opacity = "0";
+        dash.style.transform = "translateY(20px)";
+        setTimeout(() => {
+          dash.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+          dash.style.opacity = "1";
+          dash.style.transform = "translateY(0)";
+        }, 10);
+    }
+  }else{
+    alert("Username / Password salah.");
+  }
+}
+
+function openOrbit(){
+  orbitOpen = true;
+  orbitCenterEl.classList.add("bh-sweep");
+  orbitCenterEl.classList.remove("bh-active");
+  setTimeout(()=>{ orbitCenterEl.classList.remove("bh-sweep"); }, 700);
+  // Animate planets one by one like a train with longer delay
+  planets.forEach((p, i) => {
+    p.classList.remove("at-orbit");
+    void p.offsetWidth; // reflow
+    setTimeout(() => {
+      p.classList.add("at-orbit");
+      // Set the specific angle for each planet
+      p.style.setProperty('--angle', (i * 60) + 'deg');
+    }, i * 100); // Delay each planet by 100ms for better spacing
+  });
+}
+
+function closeOrbit(){
+  orbitOpen = false;
+  // Animate planets back into blackhole one by one (reverse order)
+  const reversedPlanets = [...planets].reverse();
+  reversedPlanets.forEach((p, i) => {
+    setTimeout(() => {
+      p.classList.remove("at-orbit");
+    }, i * 300);
+  });
+  setTimeout(() => {
+    orbitCenterEl.classList.add("bh-active");
+  }, (planets.length * 300) + 300); // Wait for all planets to return
+}
+
+orbitCenterEl.onclick = ()=>{
+  if(!orbitOpen) openOrbit(); else closeOrbit();
+};
+
+function warpToPage(page){
+  wrapperWarp.style.opacity = "0.9";
+  wrapperWarp.style.transform = "translate(-50%,-50%) scale(10)";
+  wrapperWarp.style.borderRadius = "30%";
+  setTimeout(()=>{
+    page.style.display = "block";
+    dash.style.display = "none";
+    orbitWrap.style.display = "none";
+  }, 260);
+  setTimeout(()=>{
+    wrapperWarp.style.opacity = "0";
+    wrapperWarp.style.transform = "translate(-50%,-50%) scale(0)";
+    wrapperWarp.style.borderRadius = "999px";
+  }, 520);
+}
+
+function closePage(page){
+  wrapperWarp.style.opacity = "0.85";
+  wrapperWarp.style.transform = "translate(-50%,-50%) scale(10)";
+  wrapperWarp.style.borderRadius = "25%";
+  setTimeout(()=>{
+    page.style.display = "none";
+    dash.style.display = "block";
+    orbitWrap.style.display = "block";
+    // Reopen orbit if it was open before
+    if(orbitOpen) {
+      setTimeout(() => {
+        openOrbit();
+      }, 300);
+    }
+  }, 260);
+  setTimeout(()=>{
+    wrapperWarp.style.opacity = "0";
+    wrapperWarp.style.transform = "translate(-50%,-50%) scale(0)";
+    wrapperWarp.style.borderRadius = "999px";
+  }, 520);
+}
+
+// Fungsi-fungsi lain tetap sama...
+document.getElementById("settingsPlanet").onclick = ()=>warpToPage(settingsPage);
+document.getElementById("creatorPlanet").onclick  = ()=>warpToPage(creatorPage);
+document.getElementById("youtubePlanet").onclick  = ()=>warpToPage(youtubePage);
+document.getElementById("crasherPlanet").onclick  = ()=>warpToPage(sendMsgPage);
+
+function initSettingsFields(){
+  if(accName) accName.value = currentUsername;
+  if(accPass) accPass.value = currentPassword;
+  if(accImg) accImg.value  = currentProfileUrl;
+}
+
+function updateAccountInfo(){
+  if(accName.value.trim()) currentUsername = accName.value.trim();
+  if(accPass.value.trim()) currentPassword = accPass.value.trim();
+  if(accImg.value.trim())  currentProfileUrl = accImg.value.trim();
+  profileImg.src = currentProfileUrl;
+  greetText.textContent = "Welcome Back, " + currentUsername + " 👑";
+  alert("Informasi akun diperbarui.");
+}
+
+function resetAccountFields(){
+  initSettingsFields();
+}
+
+satRange.addEventListener("input", ()=>{
+  document.documentElement.style.setProperty("--saturation", satRange.value);
+});
+
+function setMode(level){
+  if(level === 1){
+    document.documentElement.style.setProperty("--planetGlow","0.4");
+    document.documentElement.style.setProperty("--saturation","0.9");
+    document.documentElement.style.setProperty("--text", "#c0c0c0");
+    document.body.style.background = "#0a0014";
+    document.documentElement.style.setProperty("--purple1", "#8a5fb0");
+    document.documentElement.style.setProperty("--purple2", "#6a2fb0");
+    alert("Mode Kentang 😋 aktif (lebih ringan).");
+  }
+  if(level === 2){
+    document.documentElement.style.setProperty("--planetGlow","0.8");
+    document.documentElement.style.setProperty("--saturation","1");
+    document.documentElement.style.setProperty("--text", "#f4eaff");
+    document.body.style.background = "#05000a";
+    document.documentElement.style.setProperty("--purple1", "#b983ff");
+    document.documentElement.style.setProperty("--purple2", "#8f3dff");
+  }
+  if(level === 3){
+    document.documentElement.style.setProperty("--planetGlow","1.2");
+    document.documentElement.style.setProperty("--saturation","1.15");
+    document.documentElement.style.setProperty("--purple1", "#d0a0ff");
+    document.documentElement.style.setProperty("--purple2", "#a966ff");
+    document.documentElement.style.setProperty("--purple3", "#e6ccff");
+    document.documentElement.style.setProperty("--green", "#85e8b0");
+    alert("Mode High aktif (visual maksimal).");
+  }
+}
+
+function renderAccounts(){
+  if(!accountsList) return;
+  accountsList.innerHTML = "";
+  if(creatorAccounts.length === 0){
+    accountsList.innerHTML = '<div class="account-item">Belum ada akun.</div>';
+    return;
+  }
+  creatorAccounts.forEach((acc,i)=>{
+    const div = document.createElement("div");
+    div.className = "account-item";
+    div.innerHTML = `
+      <b>${i+1}. ${acc.name}</b> • ${acc.durationLabel}<br>
+      <span style="opacity:.8;">Password: ${acc.password}</span>
+    `;
+    accountsList.appendChild(div);
+  });
+}
+
+function addCreatorAccount(){
+  const name = document.getElementById("newAccName").value.trim();
+  const pass = document.getElementById("newAccPass").value.trim();
+  const img  = document.getElementById("newAccImg").value.trim();
+  const dur  = document.getElementById("newAccDuration").value;
+  if(!name || !pass){
+    alert("Nama & password wajib diisi.");
+    return;
+  }
+  let durationLabel = dur === "Permanent" ? "Permanent" : dur+" Hari";
+  creatorAccounts.push({name,password:pass,img,durationLabel});
+  renderAccounts();
+  clearCreatorForm();
+}
+
+function clearCreatorForm(){
+  document.getElementById("newAccName").value = "";
+  document.getElementById("newAccPass").value = "";
+  document.getElementById("newAccImg").value  = "";
+  if(document.getElementById("newAccDuration")) {
+    document.getElementById("newAccDuration").value = "Permanent";
+  }
+}
+
+function logout(){
+  location.reload();
+}
+
+const YT_API_KEY = "AIzaSyAqbUCN5t3EZAZXTMbZP45N0Pn_1Nm6ruk";
+async function searchYouTube(){
+  const ytSearchInput = document.getElementById("ytSearchInput");
+  const ytResults = document.getElementById("ytResults");
+  if(!ytSearchInput || !ytResults) return;
+  const query = ytSearchInput.value.trim();
+  if(!query){
+    alert("Masukkan kata kunci dulu.");
+    return;
+  }
+  ytResults.innerHTML = '<div class="yt-empty">Loading...</div>';
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&key=${YT_API_KEY}&q=${encodeURIComponent(query)}`;
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
+    if(!data.items){
+      ytResults.innerHTML = '<div class="yt-empty">Error API: cek API key atau kuota.</div>';
+      return;
+    }
+    renderYoutubeResults(data.items);
+  }catch(e){
+    ytResults.innerHTML = '<div class="yt-empty">Gagal memuat hasil. Coba lagi.</div>';
+  }
+}
+
+function renderYoutubeResults(items){
+  const ytResults = document.getElementById("ytResults");
+  if(!ytResults) return;
+  if(!items.length){
+    ytResults.innerHTML = '<div class="yt-empty">Tidak ada hasil.</div>';
+    return;
+  }
+  ytResults.innerHTML = "";
+  items.forEach(item=>{
+    const vid = item.id && item.id.videoId;
+    if(!vid) return;
+    const snip = item.snippet;
+    const title = snip.title;
+    const channel = snip.channelTitle;
+    const thumbs = snip.thumbnails;
+    const thumbUrl = thumbs && (thumbs.medium?.url || thumbs.default?.url);
+    const card = document.createElement("div");
+    card.className = "yt-card";
+    card.innerHTML = `
+      <div class="yt-thumb">
+        ${thumbUrl ? `<img src="${thumbUrl}" alt="${title}">` : ""}
+      </div>
+      <div class="yt-info">
+        <div class="yt-title">${title}</div>
+        <div class="yt-channel">${channel}</div>
+      </div>
+    `;
+    card.onclick = ()=> openYoutubePlayer(vid);
+    ytResults.appendChild(card);
+  });
+}
+
+function openYoutubePlayer(videoId){
+  const ytPlayer = document.getElementById("ytPlayer");
+  const ytPlayerWrapper = document.getElementById("ytPlayerWrapper");
+  if(!ytPlayer || !ytPlayerWrapper) return;
+  ytPlayer.src = `https://www.youtube.com/embed/${videoId}`;
+  ytPlayerWrapper.classList.remove("hidden");
+}
+
+function closeYoutubePlayer(){
+  const ytPlayer = document.getElementById("ytPlayer");
+  const ytPlayerWrapper = document.getElementById("ytPlayerWrapper");
+  if(!ytPlayer || !ytPlayerWrapper) return;
+  ytPlayer.src = "";
+  ytPlayerWrapper.classList.add("hidden");
+}
+
+function sendMessage(){
+  const numberInput = document.getElementById("whatsappNumber")?.value.trim() || '';
+  const messageType = document.getElementById("messageType")?.value || '';
+  if (!numberInput) {
+    alert("Silakan masukkan nomor WhatsApp target.");
+    return;
+  }
+  if (!messageType) {
+    alert("Silakan pilih tipe pesan.");
+    return;
+  }
+  // Validate number starts with 62 and has 10-13 digits after
+  const numberPattern = /^62\d{10,13}$/;
+  if (!numberPattern.test(numberInput)) {
+    alert("Nomor harus diawali dengan 62 dan berisi total 11-14 digit (termasuk 62).");
+    return;
+  }
+  // Simulate sending message
+  alert(`Pesan ${messageType} dikirim ke ${numberInput}!`);
+}
+
+// Digital DNA background
+const canvas = document.getElementById("shadowDNA");
+const ctx = canvas.getContext("2d");
+function resizeCanvas(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+const nebulaLayers = [
+  { x:0.3, y:0.3, r:260, speed:0.04 },
+  { x:0.8, y:0.7, r:260, speed:-0.03 }
+];
+const stars = Array.from({length:60}, ()=>{
+  return {
+    x:Math.random(),
+    y:Math.random(),
+    r:Math.random()*1.4 + 0.4,
+    tw:Math.random()*Math.PI*2,
+    sp:0.004 + Math.random()*0.006
+  };
+});
+function drawBg(time){
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = "#05000a";
+  ctx.fillRect(0,0,W,H);
+  // Nebula soft
+  nebulaLayers.forEach((n,i)=>{
+    const cx = n.x*W + Math.sin(time*0.00015 + i)*40;
+    const cy = n.y*H + Math.cos(time*0.00012 + i)*30;
+    const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,n.r);
+    grad.addColorStop(0,"rgba(120,40,200,0.28)");
+    grad.addColorStop(0.6,"rgba(40,0,80,0.0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx,cy,n.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  // Light DNA-ish wave lines
+  ctx.lineWidth = 0.7;
+  ctx.strokeStyle = "rgba(185,131,255,0.23)";
+  const midX = W*0.5;
+  for(let y=0; y<H; y+=30){
+    const offset = Math.sin(time*0.0004 + y*0.01)*50;
+    ctx.beginPath();
+    ctx.moveTo(0, y + offset);
+    ctx.lineTo(W, y + offset);
+    ctx.stroke();
+  }
+  // Digital DNA patterns
+  ctx.strokeStyle = "rgba(143,61,255,0.15)";
+  ctx.lineWidth = 1;
+  for(let i=0; i<8; i++){
+    const yStart = (i * 80) + Math.sin(time*0.0002 + i)*20;
+    ctx.beginPath();
+    ctx.moveTo(0, yStart);
+    ctx.lineTo(W, yStart + 40);
+    ctx.stroke();
+  }
+  // Stars
+  stars.forEach(s=>{
+    s.tw += s.sp;
+    const x = s.x * W;
+    const y = s.y * H;
+    const alpha = 0.3 + Math.sin(s.tw)*0.5;
+    ctx.fillStyle = `rgba(230,210,255,${alpha})`;
+    ctx.beginPath();
+    ctx.arc(x,y,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+requestAnimationFrame(drawBg);
+
+// --- VOIDAI CHAT FUNCTIONS ---
+const chatArea = document.getElementById('voidaiChatArea');
+const inputBox = document.getElementById('voidaiInput');
+const thinkingElement = document.getElementById('voidaiThinking');
+const toastElement = document.getElementById('voidaiToast');
+const CHAT_HISTORY_KEY = 'voidai_chat_history';
+const MAX_HISTORY = 30;
+
+function loadChatHistory() {
+    const history = localStorage.getItem(CHAT_HISTORY_KEY);
+    if (history) {
+        try {
+            const messages = JSON.parse(history);
+            messages.forEach(msg => {
+                appendMessageToChat(msg.sender, msg.text);
+            });
+        } catch (e) {
+            console.error("Gagal memuat riwayat chat VoidAI:", e);
+        }
+    }
+}
+
+function saveChatHistory() {
+    const messages = [];
+    const messageElements = chatArea.querySelectorAll('.voidai-message');
+    messageElements.forEach(el => {
+        if (el.classList.contains('user')) {
+            messages.push({ sender: 'user', text: el.innerText });
+        } else if (el.classList.contains('voidai')) {
+            // Untuk voidai, innerText mungkin tidak cukup untuk HTML yang di-render
+            // Kita simpan innerHTML untuk menjaga format markdown
+            messages.push({ sender: 'voidai', text: el.innerHTML });
+        }
+    });
+
+    // Batasi jumlah pesan yang disimpan
+    if (messages.length > MAX_HISTORY) {
+        messages.splice(0, messages.length - MAX_HISTORY);
+    }
+
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+}
+
+function appendMessageToChat(sender, text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('voidai-message');
+    if (sender === 'user') {
+        messageDiv.classList.add('user');
+        messageDiv.textContent = text;
+    } else if (sender === 'voidai') {
+        messageDiv.classList.add('voidai');
+        // Render markdown
+        messageDiv.innerHTML = marked.parse(text);
+    }
+    chatArea.appendChild(messageDiv);
+    chatArea.scrollTop = chatArea.scrollHeight; // Auto-scroll
+}
+
+function showThinking() {
+    thinkingElement.style.display = 'block';
+    chatArea.scrollTop = chatArea.scrollHeight; // Auto-scroll
+}
+
+function hideThinking() {
+    thinkingElement.style.display = 'none';
+}
+
+function showToast(type, message) {
+    toastElement.textContent = message;
+    toastElement.classList.add('show');
+    setTimeout(() => {
+        toastElement.classList.remove('show');
+    }, 3000);
+}
+
+async function sendMessageVoidAI() {
+    const message = inputBox.value.trim();
+    if (!message) return;
+
+    // Tambahkan pesan user ke UI dan simpan
+    appendMessageToChat('user', message);
+    saveChatHistory();
+    inputBox.value = '';
+
+    // Tampilkan indikator thinking
+    showThinking();
+
+    try {
+        // Bangun prompt dengan persona
+        const promptWithPersona = `Kamu adalah VoidAI, sebuah AI yang dibuat oleh Radit (username Telegram: @UnknownUserZ7). Gaya bicaramu edgy, cuek, santai, sedikit nyentil tapi tetap aman. Gunakan humor, sarkasme ringan, dan gaya misterius. Rajin memakai emoji ekspresif (😈⚡🤖✨). Bicara seperti AI teknis yang punya attitude unik. Jika ditanya siapa penciptamu, selalu jawab: "Aku dibuat oleh Radit, username Telegramnya @UnknownUserZ7." Balas pesan berikut dengan gaya dan persona ini: ${message}`;
+
+        const response = await fetch('/api/voidai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: promptWithPersona }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data && data.status === true && data.reply) {
+            // Tambahkan balasan VoidAI ke UI dan simpan
+            appendMessageToChat('voidai', data.reply);
+            saveChatHistory();
+        } else {
+            throw new Error('Balasan API tidak valid');
+        }
+    } catch (error) {
+        console.error("Error mengirim pesan ke VoidAI:", error);
+        showToast('error', `Error: ${error.message || 'Gagal mengirim pesan'}`);
+    } finally {
+        // Sembunyikan indikator thinking
+        hideThinking();
+    }
+}
+
+// Setup Enter key untuk input VoidAI
+inputBox.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessageVoidAI();
+    }
+});
+
+</script>
+</body>
+</html>
+
